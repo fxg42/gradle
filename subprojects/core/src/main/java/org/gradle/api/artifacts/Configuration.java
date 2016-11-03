@@ -19,7 +19,6 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import org.gradle.api.Action;
 import org.gradle.api.Incubating;
-import org.gradle.api.artifacts.transform.DependencyTransform;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.specs.Spec;
 import org.gradle.api.tasks.TaskDependency;
@@ -253,6 +252,9 @@ public interface Configuration extends FileCollection {
      */
     FileCollection fileCollection(Dependency... dependencies);
 
+    /**
+     * Returns a type, transformed file collection for this configuration.
+     */
     FileCollection withType(String type);
 
     /**
