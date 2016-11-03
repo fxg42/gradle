@@ -22,6 +22,7 @@ import groovy.lang.Closure;
 import org.gradle.api.Action;
 import org.gradle.api.DomainObjectSet;
 import org.gradle.api.InvalidUserDataException;
+import org.gradle.api.Transformer;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.artifacts.DependencyResolutionListener;
@@ -765,15 +766,13 @@ public class DefaultConfiguration extends AbstractFileCollection implements Conf
             }
 
 
+            // TODO:DAZ Caching the transformed outputs
+            // TODO:DAZ Parallel evaluation
             for (ResolvedArtifact artifact : artifacts) {
                 // Attempt to transform each artifact
-                DependencyTransform transform =  getResolutionStrategy().getTransform(artifact.getType(), type);
+                Transformer<File, File> transform =  getResolutionStrategy().getTransform(artifact.getType(), type);
                 if (transform != null) {
-                    if (transform.getOutputDirectory() != null) {
-                        transform.getOutputDirectory().mkdirs();
-                    }
-                    transform.transform(artifact.getFile());
-                    artifactFiles.add(transform.getOutput());
+                    artifactFiles.add(transform.transform(artifact.getFile()));
                 }
             }
             return artifactFiles;
