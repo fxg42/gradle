@@ -123,10 +123,7 @@ artifacts {
     dists allZip, binZip, srcZip
 }
 
-integTest {
-    inputs.files allZip, binZip, srcZip
-}
-
-java9IntegTest {
+integTestTasks.all {
+    requiresDists = true
     inputs.files allZip, binZip, srcZip
 }

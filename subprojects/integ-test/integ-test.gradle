@@ -25,8 +25,8 @@ integTestTasks.all {
     inputs.files(fileTree(userguideOutput))
 
     doFirst {
-        systemProperties['integTest.userGuideInfoDir'] = project(':docs').docbookSrc
-        systemProperties['integTest.userGuideOutputDir'] = userguideOutput.absolutePath
+        fileSystemProperty 'integTest.userGuideInfoDir', project(':docs').docbookSrc
+        fileSystemProperty 'integTest.userGuideOutputDir', userguideOutput
     }
 
     // You can exclude the userguide samples by their ids by specifying this system property.

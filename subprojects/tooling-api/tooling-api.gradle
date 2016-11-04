@@ -33,6 +33,8 @@ useTestFixtures(project: ':ide')
 
 integTestTasks.all {
     dependsOn(publishLocalArchives, ':distributions:binZip')
+    requiresDists = true
+    requiresLibsRepo = true
 }
 
 forkingIntegTest {
