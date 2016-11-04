@@ -107,7 +107,7 @@ class DistributionTest extends Test {
     void setRequiresDists(boolean requiresDists) {
         this.requiresDists = requiresDists
         if (requiresDists) {
-            dependsOn(['all', 'bin', 'src'].collect { ":distributions:${it}Zip" })
+            dependsOn(['all', 'bin', 'testBin', 'src'].collect { ":distributions:${it}Zip" })
         }
     }
 
@@ -122,7 +122,7 @@ class DistributionTest extends Test {
     void setRequiresBinZip(boolean requiresBinZip) {
         this.requiresBinZip = requiresBinZip
         if (requiresBinZip) {
-            dependsOn(':distributions:binZip')
+            dependsOn(':distributions:testBinZip')
         }
     }
 
