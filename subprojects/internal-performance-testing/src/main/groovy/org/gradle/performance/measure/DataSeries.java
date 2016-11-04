@@ -18,12 +18,14 @@ package org.gradle.performance.measure;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * A collection of measurements of some given units.
  */
 public class DataSeries<Q> extends ArrayList<Amount<Q>> {
     private final Amount<Q> average;
+    private final Amount<Q> median;
     private final Amount<Q> max;
     private final Amount<Q> min;
     // https://en.wikipedia.org/wiki/Standard_error
@@ -40,6 +42,7 @@ public class DataSeries<Q> extends ArrayList<Amount<Q>> {
 
         if (isEmpty()) {
             average = null;
+            median = null;
             max = null;
             min = null;
             standardError = null;
@@ -56,6 +59,8 @@ public class DataSeries<Q> extends ArrayList<Amount<Q>> {
             min = min.compareTo(amount) <= 0 ? min : amount;
             max = max.compareTo(amount) >= 0 ? max : amount;
         }
+        Collections.sort(this);
+        median = get(size() / 2);
         average = total.div(size());
         this.min = min;
         this.max = max;
@@ -79,6 +84,10 @@ public class DataSeries<Q> extends ArrayList<Amount<Q>> {
 
     public Amount<Q> getAverage() {
         return average;
+    }
+
+    public Amount<Q> getMedian() {
+        return median;
     }
 
     public Amount<Q> getMin() {

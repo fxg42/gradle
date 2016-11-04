@@ -84,7 +84,7 @@ class BaselineVersion implements VersionResults {
     }
 
     boolean fasterThan(MeasuredOperationList current) {
-        results.totalTime && current.totalTime.average - results.totalTime.average > getMaxExecutionTimeRegression()
+        results.totalTime && current.totalTime.median - results.totalTime.median > getMaxExecutionTimeRegression()
     }
 
     boolean usesLessMemoryThan(MeasuredOperationList current) {

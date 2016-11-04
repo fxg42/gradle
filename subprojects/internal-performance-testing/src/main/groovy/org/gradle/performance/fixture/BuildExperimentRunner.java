@@ -34,7 +34,6 @@ public class BuildExperimentRunner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BuildExperimentRunner.class);
     public static final String HEAP_DUMP_PROPERTY = "org.gradle.performance.heapdump";
-    private static final File OS_PREPARE_SCRIPT = new File(System.getProperty("org.gradle.performance.os_prepare_script", "/usr/local/bin/gradle_perf_test_prepare_next.sh"));
 
     private final DataCollector dataCollector;
     private final GradleSessionProvider executerProvider;
@@ -57,7 +56,7 @@ public class BuildExperimentRunner {
         GCLoggingCollector gcCollector = new GCLoggingCollector();
         PerformanceCounterCollector performanceCounterCollector = new PerformanceCounterCollector();
         honestProfiler = new HonestProfilerCollector();
-        dataCollector = new CompositeDataCollector(memoryInfoCollector, gcCollector, buildEventTimestampCollector, performanceCounterCollector, new CompilationLoggingCollector(), honestProfiler);
+        dataCollector = new CompositeDataCollector(honestProfiler);
     }
 
     public HonestProfilerCollector getHonestProfiler() {
@@ -112,43 +111,14 @@ public class BuildExperimentRunner {
     }
 
     protected void performMeasurements(final InvocationExecutorProvider session, BuildExperimentSpec experiment, MeasuredOperationList results, File projectDir) {
-        prepareNextExperiment(experiment, projectDir);
         doWarmup(experiment, projectDir, session);
         waitForMillis(experiment, experiment.getSleepAfterWarmUpMillis());
         doMeasure(experiment, results, projectDir, session);
     }
 
-    protected void prepareNextExperiment(BuildExperimentSpec experiment, File projectDir) {
-        runOsPrepareNextTestScript();
-    }
-
-    // the preparation script can prepare the OS for a next measurement round by flushing OS caches
-    private void runOsPrepareNextTestScript() {
-        if (OS_PREPARE_SCRIPT.exists()) {
-            try {
-                String scriptPath = OS_PREPARE_SCRIPT.getPath();
-                System.out.println("Running " + scriptPath);
-                ProcessBuilder processBuilder = new ProcessBuilder().command(scriptPath);
-                processBuilder.inheritIO();
-                Process process = processBuilder.start();
-                int exitCode = process.waitFor();
-                if (exitCode == 0) {
-                    System.out.println("Done.");
-                } else {
-                    System.out.println("Failed with error code " + exitCode);
-                }
-            } catch (Exception e) {
-                LOGGER.warn("Problem running preparation script " + OS_PREPARE_SCRIPT, e);
-            }
-        }
-    }
-
     private void doMeasure(BuildExperimentSpec experiment, MeasuredOperationList results, File projectDir, InvocationExecutorProvider session) {
         int invocationCount = invocationsForExperiment(experiment);
         for (int i = 0; i < invocationCount; i++) {
-            if (i > 0) {
-                waitForMillis(experiment, experiment.getSleepAfterTestRoundMillis());
-            }
             System.out.println();
             System.out.println(String.format("Test run #%s", i + 1));
             BuildExperimentInvocationInfo info = new DefaultBuildExperimentInvocationInfo(experiment, projectDir, Phase.MEASUREMENT, i + 1, invocationCount);
@@ -204,7 +174,7 @@ public class BuildExperimentRunner {
         if (usesDaemon(experiment)) {
             return 10;
         } else {
-            return 14;
+            return 20;
         }
     }
 
@@ -219,7 +189,7 @@ public class BuildExperimentRunner {
         if (usesDaemon(experiment)) {
             return 20;
         } else {
-            return 4;
+            return 1;
         }
     }
 

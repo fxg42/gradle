@@ -34,7 +34,7 @@ import java.util.Date;
  */
 public class MeasurementPlugin implements Plugin<Project> {
 
-    private final static boolean DISABLED = Boolean.getBoolean("org.gradle.performance.measurement.disabled");
+    private final static boolean DISABLED = true;
 
     @Override
     public void apply(Project project) {
