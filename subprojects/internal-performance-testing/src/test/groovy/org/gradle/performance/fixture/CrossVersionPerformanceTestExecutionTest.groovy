@@ -18,7 +18,9 @@ package org.gradle.performance.fixture
 
 import org.gradle.performance.ResultSpecification
 import org.gradle.performance.results.CrossVersionPerformanceResults
+import spock.lang.Ignore
 
+@Ignore
 class CrossVersionPerformanceTestExecutionTest extends ResultSpecification {
     def CrossVersionPerformanceResults result = new CrossVersionPerformanceResults(testProject: "some-project", tasks: [])
 

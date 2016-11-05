@@ -153,7 +153,7 @@ public abstract class HtmlPageGenerator<T> extends ReportRenderer<T, Writer> {
                 if (data.isEmpty()) {
                     values.add(null);
                 } else {
-                    Amount<T> value = data.getAverage();
+                    Amount<T> value = data.getMedian();
                     values.add(data);
                     if (min == null || value.compareTo(min) < 0) {
                         min = value;
@@ -173,7 +173,7 @@ public abstract class HtmlPageGenerator<T> extends ReportRenderer<T, Writer> {
                     td().text("").end();
                     td().text("").end();
                 } else {
-                    Amount<T> value = data.getAverage();
+                    Amount<T> value = data.getMedian();
                     Amount<T> stddev = data.getStandardError();
                     String classAttr = "numeric";
                     if (value.equals(min)) {
@@ -184,7 +184,7 @@ public abstract class HtmlPageGenerator<T> extends ReportRenderer<T, Writer> {
                     }
                     td()
                         .classAttr(classAttr)
-                        .title("avg: " + value + ", min: " + data.getMin() + ", max: " + data.getMax() + ", stddev: " + stddev + ", values: " + data)
+                        .title("median: " + value + ", min: " + data.getMin() + ", max: " + data.getMax() + ", stddev: " + stddev + ", values: " + data)
                         .text(value.format())
                     .end();
                     td()

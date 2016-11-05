@@ -93,10 +93,8 @@ public class TestPageGenerator extends HtmlPageGenerator<PerformanceTestHistory>
             th().text("Date").end();
             th().text("Branch").end();
             th().text("Git commit").end();
-            for (int i = 0; i < 8; i++) {
-                for (String label : testHistory.getScenarioLabels()) {
-                    renderHeaderForSamples(label);
-                }
+            for (String label : testHistory.getScenarioLabels()) {
+                renderHeaderForSamples(label);
             }
             th().text("Test version").end();
             th().text("Operating System").end();
