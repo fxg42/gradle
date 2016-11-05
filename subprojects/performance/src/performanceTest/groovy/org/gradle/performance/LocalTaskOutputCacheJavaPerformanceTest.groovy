@@ -31,7 +31,7 @@ class LocalTaskOutputCacheJavaPerformanceTest extends AbstractCrossVersionPerfor
         runner.tasksToRun = tasks
         runner.useDaemon = true
         runner.targetVersions = ['3.2-rc-2']
-        runner.gradleOpts = ["-Xms8g", "-Xmx8g"]
+        runner.gradleOpts = ["-Xms2g", "-Xmx2g"]
         runner.args = ['-Dorg.gradle.cache.tasks=true']
 
         when:
