@@ -112,7 +112,6 @@ public class BuildExperimentRunner {
 
     protected void performMeasurements(final InvocationExecutorProvider session, BuildExperimentSpec experiment, MeasuredOperationList results, File projectDir) {
         doWarmup(experiment, projectDir, session);
-        waitForMillis(experiment, experiment.getSleepAfterWarmUpMillis());
         doMeasure(experiment, results, projectDir, session);
     }
 
