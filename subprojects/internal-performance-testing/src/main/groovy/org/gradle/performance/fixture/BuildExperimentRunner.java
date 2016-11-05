@@ -172,7 +172,7 @@ public class BuildExperimentRunner {
             return experiment.getInvocationCount();
         }
         if (usesDaemon(experiment)) {
-            return 10;
+            return 20;
         } else {
             return 20;
         }
