@@ -130,7 +130,7 @@ if (plugins.hasPlugin("com.gradle.build-scan")) {
             @Override
             void afterExecute(Task task, TaskState state) {
                 def tasksToInvestigate = [
-                    ':wrapper:integTest',
+                    ':toolingApi:integTest',
                     ':core:compileTestFixturesGroovy',
                     ':diagnostics:compileTestGroovy',
                     ':internalAndroidPerformanceTesting:compileJava',
