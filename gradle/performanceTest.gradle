@@ -127,7 +127,7 @@ performanceTestTasks.all { PerformanceTest task ->
     testClassesDir = sourceSets.performanceTest.output.classesDir
     classpath = sourceSets.performanceTest.runtimeClasspath
     dependsOn( prepareSamples, { project(':toolingApi').publishLocalArchives }, ':distributions:binZip')
-    requiresDists = true
+    requiresBinDist = true
     requiresLibsRepo = true
 
     finalizedBy performanceReport

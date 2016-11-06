@@ -48,8 +48,8 @@ task executableJar(type: Jar) {
 }
 
 integTestTasks.all {
-    inputs.files { project(":distributions").binZip }
-    requiresDists = true
+    dependsOn ":distributions:binZip"
+    requiresBinDist = true
 }
 
 useTestFixtures()

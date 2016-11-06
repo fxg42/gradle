@@ -16,8 +16,10 @@
 
 package org.gradle.testing
 
+import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.PathSensitive
@@ -89,6 +91,24 @@ class DistributionTest extends Test {
     void setDistsDir(File distsDir) {
         this.distsDir = distsDir
         fileSystemProperty('integTest.distsDir', distsDir)
+    }
+
+    @Input
+    boolean requiresBinDist
+
+    @Internal
+    File binDist
+
+    void setBinDist(File binDist) {
+        this.binDist = binDist
+        fileSystemProperty('integTest.distsDir', binDist.parentFile)
+    }
+
+    @Optional
+    @InputFiles
+    @PathSensitive(PathSensitivity.RELATIVE)
+    FileCollection getBinDistContents() {
+        binDist ? project.zipTree(binDist) : null
     }
 
     /** The user home dir is not wiped out by clean
