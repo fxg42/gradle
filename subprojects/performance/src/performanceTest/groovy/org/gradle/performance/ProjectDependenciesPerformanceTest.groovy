@@ -28,6 +28,7 @@ class ProjectDependenciesPerformanceTest extends AbstractCrossVersionPerformance
         runner.testProject = "lotProjectDependencies"
         runner.tasksToRun = ['resolveDependencies']
         runner.useDaemon = true
+        runner.gradleOpts = ['-Xmx512m']
         // TODO(pepper): Revert this to 'last' when 3.2 is released
         // The regression was introduced by some code which makes parallel
         // execution and cases work much better. That is currently a more
