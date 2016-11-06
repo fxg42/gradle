@@ -16,9 +16,12 @@
 
 package org.gradle.performance.measure;
 
+import com.google.common.collect.Lists;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * A collection of measurements of some given units.
@@ -59,8 +62,9 @@ public class DataSeries<Q> extends ArrayList<Amount<Q>> {
             min = min.compareTo(amount) <= 0 ? min : amount;
             max = max.compareTo(amount) >= 0 ? max : amount;
         }
-        Collections.sort(this);
-        median = get(size() / 2);
+        List<Amount<Q>> sorted = Lists.newArrayList(this);
+        Collections.sort(sorted);
+        median = sorted.get(sorted.size() / 2);
         average = total.div(size());
         this.min = min;
         this.max = max;
