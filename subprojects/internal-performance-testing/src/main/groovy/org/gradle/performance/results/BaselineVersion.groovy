@@ -50,7 +50,7 @@ class BaselineVersion implements VersionResults {
 
             def diff = currentVersionMedian - thisVersionMedian
             def desc = diff > Duration.millis(0) ? "slower" : "faster"
-            sb.append("Difference: ${diff.abs().format()} $desc (${toMillis(diff.abs())}), ${PrettyCalculator.percentChange(currentVersionMedian, thisVersionMedian)}%, max regression: ${getMaxExecutionTimeRegression().format()}\n")
+            sb.append("Difference: ${diff.abs().format()} $desc (${toMillis(diff.abs())}), ${PrettyCalculator.percentChange(currentVersionMedian, thisVersionMedian)}%, max regression: ${getMaxExecutionTimeRegression(current).format()}\n")
             sb.append(current.speedStats)
             sb.append(results.speedStats)
             sb.append("\n")
@@ -84,16 +84,15 @@ class BaselineVersion implements VersionResults {
     }
 
     boolean fasterThan(MeasuredOperationList current) {
-        results.totalTime && current.totalTime.median - results.totalTime.median > getMaxExecutionTimeRegression()
+        results.totalTime && current.totalTime.median - results.totalTime.median > getMaxExecutionTimeRegression(current)
     }
 
     boolean usesLessMemoryThan(MeasuredOperationList current) {
         results.totalMemoryUsed && current.totalMemoryUsed.average - results.totalMemoryUsed.average > getMaxMemoryRegression()
     }
 
-    Amount<Duration> getMaxExecutionTimeRegression() {
-        def allowedStatisticalRegression = results.totalTime.standardErrorOfMean * NUM_STANDARD_ERRORS_FROM_MEAN
-        allowedStatisticalRegression
+    Amount<Duration> getMaxExecutionTimeRegression(MeasuredOperationList current) {
+        (results.totalTime.standardErrorOfMean + current.totalTime.standardErrorOfMean) / 2 * NUM_STANDARD_ERRORS_FROM_MEAN
     }
 
     Amount<DataAmount> getMaxMemoryRegression() {
