@@ -33,7 +33,7 @@ class JavaPartialAssembleDaemonPerformanceTest extends AbstractCrossVersionPerfo
         runner.useDaemon = true
         runner.tasksToRun = [":project1:clean", ":project1:assemble"]
         runner.targetVersions = targetVersions
-        runner.gradleOpts = ["-Xms1g", "-Xmx1g"]
+        runner.gradleOpts = ["-Xmx512m"]
 
         when:
         def result = runner.run()
@@ -61,7 +61,7 @@ class JavaPartialAssembleDaemonPerformanceTest extends AbstractCrossVersionPerfo
         // The regression was determined acceptable in this discussion:
         // https://issues.gradle.org/browse/GRADLE-1346
         runner.targetVersions = ['3.2-rc-1']
-        runner.gradleOpts = ["-Xms1g", "-Xmx1g"]
+        runner.gradleOpts = ["-Xmx512m"]
 
         when:
         def result = runner.run()

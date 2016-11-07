@@ -29,6 +29,7 @@ class DependencyResolutionPerformanceTest extends AbstractCrossVersionPerformanc
         runner.testProject = testProject
         runner.tasksToRun = ['resolveDependencies']
         runner.targetVersions = targetVersions
+        runner.gradleOpts = ["-Xmx1g"]
         runner.useDaemon = true
 
         when:
