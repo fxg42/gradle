@@ -228,8 +228,13 @@ abstract class AbstractToolingApiCrossVersionPerformanceTest extends Specificati
                         experimentSpec.listener.beforeInvocation(info)
                     }
                     println "Run #${n + 1}"
-                    def measuredOperation = timer.measure {
-                        toolingApi.withConnection(action)
+                    def measuredOperation = toolingApi.withConnection {
+                        action.delegate = delegate
+                        try {
+                            timer.measure(action)
+                        } finally {
+                            action.delegate = null
+                        }
                     }
 
                     measuredOperation.configurationTime = Duration.millis(0)
