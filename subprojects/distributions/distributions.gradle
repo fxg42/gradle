@@ -84,6 +84,7 @@ task allZip(type: Zip) {
 }
 
 task binZip(type: Zip) {
+    outputs.cacheIf { true }
     classifier = 'bin'
     into(zipRootFolder) {
         with binDistImage
