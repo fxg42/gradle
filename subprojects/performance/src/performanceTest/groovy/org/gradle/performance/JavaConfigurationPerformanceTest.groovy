@@ -29,6 +29,7 @@ class JavaConfigurationPerformanceTest extends AbstractCrossVersionPerformanceTe
         runner.previousTestIds = ["configuration $testProject"]
         runner.testProject = testProject
         runner.tasksToRun = ['help']
+        runner.gradleOpts = ['-Xmx512m']
         runner.targetVersions = targetVersions
 
         when:
