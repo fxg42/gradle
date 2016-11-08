@@ -37,6 +37,8 @@ import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.UUID;
 
+import static org.gradle.internal.remote.internal.inet.Sockets.configureSocket;
+
 public class TcpIncomingConnector implements IncomingConnector {
     private static final Logger LOGGER = LoggerFactory.getLogger(TcpIncomingConnector.class);
     private final ExecutorFactory executorFactory;
@@ -100,6 +102,7 @@ public class TcpIncomingConnector implements IncomingConnector {
                 try {
                     while (true) {
                         final SocketChannel socket = serverSocket.accept();
+                        configureSocket(socket.socket());
                         InetSocketAddress remoteSocketAddress = (InetSocketAddress) socket.socket().getRemoteSocketAddress();
                         InetAddress remoteInetAddress = remoteSocketAddress.getAddress();
                         if (!allowRemote && !addressFactory.isCommunicationAddress(remoteInetAddress)) {

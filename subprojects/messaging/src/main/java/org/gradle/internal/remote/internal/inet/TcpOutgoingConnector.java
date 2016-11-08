@@ -24,9 +24,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.nio.channels.SocketChannel;
 import java.util.List;
+
+import static org.gradle.internal.remote.internal.inet.Sockets.configureSocket;
 
 public class TcpOutgoingConnector implements OutgoingConnector {
     private static final Logger LOGGER = LoggerFactory.getLogger(TcpOutgoingConnector.class);
@@ -77,6 +84,7 @@ public class TcpOutgoingConnector implements OutgoingConnector {
         SocketChannel socketChannel = SocketChannel.open();
 
         try {
+            configureSocket(socketChannel.socket());
             socketChannel.socket().connect(new InetSocketAddress(candidate, address.getPort()), CONNECT_TIMEOUT);
 
             if (!detectSelfConnect(socketChannel)) {
