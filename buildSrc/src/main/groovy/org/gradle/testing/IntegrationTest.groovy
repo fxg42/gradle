@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package org.gradle.testing;
+package org.gradle.testing
 
-import org.gradle.api.tasks.CacheableTask;
+import groovy.transform.CompileStatic
+import org.gradle.api.tasks.CacheableTask
+import sun.jvm.hotspot.opto.Compile
 
 /**
  * Verifies the correct behavior of a feature, as opposed to just a small unit of code.
@@ -24,5 +26,6 @@ import org.gradle.api.tasks.CacheableTask;
  * been using the term 'integration test'.
  */
 @CacheableTask
-public class IntegrationTest extends DistributionTest {
+@CompileStatic
+class IntegrationTest extends DistributionTest {
 }
