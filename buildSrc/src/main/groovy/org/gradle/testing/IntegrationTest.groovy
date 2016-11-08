@@ -18,7 +18,12 @@ package org.gradle.testing
 
 import groovy.transform.CompileStatic
 import org.gradle.api.tasks.CacheableTask
-import sun.jvm.hotspot.opto.Compile
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
 
 /**
  * Verifies the correct behavior of a feature, as opposed to just a small unit of code.
@@ -28,4 +33,26 @@ import sun.jvm.hotspot.opto.Compile
 @CacheableTask
 @CompileStatic
 class IntegrationTest extends DistributionTest {
+    @Input
+    boolean requiresSamples
+
+    @Optional
+    @InputFile
+    @PathSensitive(PathSensitivity.NAME_ONLY)
+    File samplesXml
+
+    void setSamplesXml(File samplesXml) {
+        this.samplesXml = samplesXml
+        fileSystemProperty('integTest.userGuideInfoDir', samplesXml.parentFile)
+    }
+
+    @Optional
+    @InputDirectory
+    @PathSensitive(PathSensitivity.RELATIVE)
+    File userGuideOutputDir
+
+    void setUserGuideOutputDir(File userGuideOutputDir) {
+        this.userGuideOutputDir = userGuideOutputDir
+        fileSystemProperty('integTest.userGuideOutputDir', userGuideOutputDir)
+    }
 }
