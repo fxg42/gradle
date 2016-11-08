@@ -117,22 +117,22 @@ class DistributionTest extends Test {
     }
 
     @Input
-    boolean requiresBinDist
+    boolean requiresBinZip
 
-    void setRequiresBinDist(boolean requiresBinDist) {
-        this.requiresBinDist = requiresBinDist
-        if (requiresBinDist) {
+    void setRequiresBinZip(boolean requiresBinZip) {
+        this.requiresBinZip = requiresBinZip
+        if (requiresBinZip) {
             dependsOn(':distributions:binZip')
         }
     }
 
     @Optional
     @InputFile
-    File binDist
+    File binZip
 
-    void setBinDist(File binDist) {
-        this.binDist = binDist
-        fileSystemProperty('integTest.distsDir', binDist.parentFile)
+    void setBinZip(File binZip) {
+        this.binZip = binZip
+        fileSystemProperty('integTest.distsDir', binZip.parentFile)
     }
 
     /** The user home dir is not wiped out by clean

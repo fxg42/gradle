@@ -127,7 +127,7 @@ performanceTestTasks.all { PerformanceTest task ->
     testClassesDir = sourceSets.performanceTest.output.classesDir
     classpath = sourceSets.performanceTest.runtimeClasspath
     dependsOn prepareSamples
-    requiresBinDist = true
+    requiresBinZip = true
     requiresLibsRepo = true
 
     finalizedBy performanceReport

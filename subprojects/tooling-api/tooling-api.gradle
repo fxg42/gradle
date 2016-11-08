@@ -32,7 +32,7 @@ useTestFixtures(project: ':dependencyManagement')
 useTestFixtures(project: ':ide')
 
 integTestTasks.all {
-    requiresBinDist = true
+    requiresBinZip = true
     requiresLibsRepo = true
 }
 
