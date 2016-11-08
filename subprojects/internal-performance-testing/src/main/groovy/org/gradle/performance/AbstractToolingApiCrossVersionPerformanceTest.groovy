@@ -163,25 +163,9 @@ abstract class AbstractToolingApiCrossVersionPerformanceTest extends Specificati
             try {
                 List<String> baselines = CrossVersionPerformanceTestRunner.toBaselineVersions(RELEASES, experimentSpec.targetVersions).toList()
                 [*baselines, 'current'].each { String version ->
-                    def workingDirProvider = copyTemplateTo(projectDir, experimentSpec.workingDirectory, version)
                     GradleDistribution dist = 'current' == version ? CURRENT : buildContext.distribution(version)
-                    println "Testing ${dist.version}..."
                     def toolingApiDistribution = resolver.resolve(dist.version.version)
-                    def testClassPath = [*experimentSpec.extraTestClassPath]
-                    // add TAPI test fixtures to classpath
-                    testClassPath << ClasspathUtil.getClasspathForClass(ToolingApi)
-                    tapiClassLoader = getTestClassLoader(testClassLoaders, toolingApiDistribution, testClassPath) {
-                    }
-                    def tapiClazz = tapiClassLoader.loadClass(ToolingApi.name)
-                    assert tapiClazz != ToolingApi
-                    def toolingApi = tapiClazz.newInstance(dist, workingDirProvider)
-                    toolingApi.requireIsolatedDaemons()
-                    toolingApi.requireIsolatedUserHome()
-                    warmup(toolingApi, workingDirProvider.testDirectory)
-                    println "Waiting ${experimentSpec.sleepAfterWarmUpMillis}ms before measurements"
-                    sleep(experimentSpec.sleepAfterWarmUpMillis)
-                    measure(results, toolingApi, version, workingDirProvider.testDirectory)
-                    toolingApi.daemons.killAll()
+                    doMeasurement(dist, toolingApiDistribution, projectDir, results, version)
                 }
             } finally {
                 resolver.stop()
@@ -193,6 +177,39 @@ abstract class AbstractToolingApiCrossVersionPerformanceTest extends Specificati
             resultStore.report(results)
 
             results
+        }
+
+        private void doMeasurement(dist, toolingApiDistribution, projectDir, results, version) {
+            def workingDirProvider = copyTemplateTo(projectDir, experimentSpec.workingDirectory, version)
+
+            println "Testing ${dist.version}..."
+
+            def toolingApi = setupToolingApi(toolingApiDistribution, dist, workingDirProvider)
+
+            warmup(toolingApi, workingDirProvider.testDirectory)
+
+            println "Waiting ${experimentSpec.sleepAfterWarmUpMillis}ms before measurements"
+            sleep(experimentSpec.sleepAfterWarmUpMillis)
+
+            measure(results, toolingApi, version, workingDirProvider.testDirectory)
+
+            toolingApi.daemons.killAll()
+        }
+
+        private def setupToolingApi(toolingApiDistribution, dist, TestDirectoryProvider workingDirProvider) {
+            def testClassPath = [*experimentSpec.extraTestClassPath]
+            // add TAPI test fixtures to classpath
+            testClassPath << ClasspathUtil.getClasspathForClass(ToolingApi)
+            tapiClassLoader = getTestClassLoader(testClassLoaders, toolingApiDistribution, testClassPath) {
+            }
+
+            def tapiClazz = tapiClassLoader.loadClass(ToolingApi.name)
+            assert tapiClazz != ToolingApi
+
+            def toolingApi = tapiClazz.newInstance(dist, workingDirProvider)
+            toolingApi.requireIsolatedDaemons()
+            toolingApi.requireIsolatedUserHome()
+            toolingApi
         }
 
         private TestDirectoryProvider copyTemplateTo(File templateDir, File workingDir, String version) {
