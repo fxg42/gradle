@@ -16,6 +16,7 @@
 package org.gradle.api.internal.artifacts.ivyservice;
 
 import com.google.common.collect.Sets;
+import com.google.common.io.Files;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.artifacts.FileCollectionDependency;
@@ -312,7 +313,7 @@ public class DefaultLenientConfiguration implements LenientConfiguration, Artifa
         void visitArtifacts(Set<ResolvedArtifact> artifacts) {
             for (ResolvedArtifact artifact : artifacts) {
                 try {
-                    this.artifacts.add(new DefaultResolvedArtifactResult(artifact.getId(), Artifact.class, artifact.getFile()));
+                    this.artifacts.add(new DefaultResolvedArtifactResult(artifact.getId(), Artifact.class, artifact.getType(), artifact.getFile()));
                 } catch (Throwable t) {
                     failures.add(t);
                 }
@@ -328,7 +329,7 @@ public class DefaultLenientConfiguration implements LenientConfiguration, Artifa
         void visitFiles(FileCollection fileCollection) {
             try {
                 for (File file : fileCollection) {
-                    artifacts.add(new DefaultResolvedArtifactResult(new OpaqueComponentArtifactIdentifier(file.getName()), Artifact.class, file));
+                    artifacts.add(new DefaultResolvedArtifactResult(new OpaqueComponentArtifactIdentifier(file.getName()), Artifact.class, Files.getFileExtension(file.getName()), file));
                 }
             } catch (Throwable t) {
                 failures.add(t);
