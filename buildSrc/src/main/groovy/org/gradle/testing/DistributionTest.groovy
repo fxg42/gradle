@@ -16,6 +16,7 @@
 
 package org.gradle.testing
 
+import groovy.transform.CompileStatic
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.InputFile
@@ -29,12 +30,21 @@ import org.gradle.internal.os.OperatingSystem
 /**
  * Base class for all tests that check the end-to-end behavior of a Gradle distribution.
  */
+@CompileStatic
 class DistributionTest extends Test {
     @Input
     String getOperatingSystem() {
         OperatingSystem.current().toString()
     }
 
+    /**
+     * The system properties not coming from absolute paths.
+     *
+     * We cannot rely on {@link #getSystemProperties()} as an input since it will contain absolute paths -
+     * and this defeats relocatability of the distribution test tasks.
+     * The input coming from {@link #getSystemProperties()} will be set to an empty map in the build script
+     * since we do not have the possibility yet to override it from here.
+     */
     @Input
     Map<String, Object> getPlainSystemProperties() {
         super.getSystemProperties() - fileSystemProperties.collectEntries { key, value -> [(key): value.absolutePath] }

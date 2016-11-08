@@ -47,24 +47,24 @@ distributionTestTasks.all { DistributionTest task ->
                 reports.html.destination = file("${project.reporting.baseDir}/$name")
                 inputs.property 'systemProperties', [:]
 
-                task.gradleHomeDir = rootProject.intTestImage.destinationDir
-                task.gradleUserHomeDir = rootProject.file('intTestHomeDir')
+                gradleHomeDir = rootProject.intTestImage.destinationDir
+                gradleUserHomeDir = rootProject.file('intTestHomeDir')
 
-                if (task.requiresLibsRepo) {
-                    task.libsRepo = rootProject.file('build/repo')
+                if (requiresLibsRepo) {
+                    libsRepo = rootProject.file('build/repo')
                 }
-                task.toolingApiShadedJarDir = rootProject.project(':toolingApi').shadedJar.outputDir
+                toolingApiShadedJarDir = rootProject.project(':toolingApi').shadedJar.outputDir
 
                 // Only wrapper and toolingApi use the bin distribution
                 // The rest uses only the intTestImage
                 // distributions tests all the distributions
-                if (task.requiresDists) {
-                    task.distsDir = rootProject.distsDir
+                if (requiresDists) {
+                    distsDir = rootProject.distsDir
                 }
-                if (task.requiresBinDist) {
-                    task.binDist = project(':distributions').binZip.archivePath
+                if (requiresBinDist) {
+                    binDist = project(':distributions').binZip.archivePath
                 }
-                task.daemonRegistry = file("$rootProject.buildDir/daemon")
+                daemonRegistry = file("$rootProject.buildDir/daemon")
             }
         }
     }
