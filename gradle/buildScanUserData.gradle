@@ -136,6 +136,7 @@ if (plugins.hasPlugin("com.gradle.build-scan")) {
                     ':internalAndroidPerformanceTesting:compileJava',
                     ':launcher:compileTestFixturesGroovy',
                     ':docs:checkstyleApi',
+                    ':integTest:integTest',
                     ':announce:checkstyleIntegTestGroovy']
                 if (task.getPath() in tasksToInvestigate) {
                     def buildScan = task.project.buildScan

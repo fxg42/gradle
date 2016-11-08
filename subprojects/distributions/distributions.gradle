@@ -126,5 +126,4 @@ artifacts {
 
 integTestTasks.all {
     requiresDists = true
-    inputs.files allZip, binZip, srcZip
 }

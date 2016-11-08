@@ -18,8 +18,6 @@ useTestFixtures(sourceSet: 'integTest', project: ':diagnostics')
 useTestFixtures(sourceSet: 'integTest', project: ':platformNative')
 
 integTestTasks.all { task ->
-    dependsOn({ project(':toolingApi').publishLocalArchives }, ':docs:userguideDocbook')
-
     project.tasks.findByName("configure${task.name.capitalize()}").configure {
         requiresSamples = true
         requiresLibsRepo = true

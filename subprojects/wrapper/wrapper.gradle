@@ -48,7 +48,6 @@ task executableJar(type: Jar) {
 }
 
 integTestTasks.all {
-    dependsOn ":distributions:binZip"
     requiresBinDist = true
 }
 

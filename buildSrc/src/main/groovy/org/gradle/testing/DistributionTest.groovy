@@ -80,6 +80,13 @@ class DistributionTest extends Test {
     @Input
     boolean requiresLibsRepo
 
+    void setRequiresLibsRepo(boolean requiresLibsRepo) {
+        this.requiresLibsRepo = requiresLibsRepo
+        if (requiresLibsRepo) {
+            dependsOn(':toolingApi:publishLocalArchives')
+        }
+    }
+
     @InputDirectory
     @PathSensitive(PathSensitivity.RELATIVE)
     File toolingApiShadedJarDir
@@ -97,6 +104,13 @@ class DistributionTest extends Test {
     @Input
     boolean requiresDists
 
+    void setRequiresDists(boolean requiresDists) {
+        this.requiresDists = requiresDists
+        if (requiresDists) {
+            dependsOn(['all', 'bin', 'src'].collect { ":distributions:${it}Zip" })
+        }
+    }
+
     void setDistsDir(File distsDir) {
         this.distsDir = distsDir
         fileSystemProperty('integTest.distsDir', distsDir)
@@ -104,6 +118,13 @@ class DistributionTest extends Test {
 
     @Input
     boolean requiresBinDist
+
+    void setRequiresBinDist(boolean requiresBinDist) {
+        this.requiresBinDist = requiresBinDist
+        if (requiresBinDist) {
+            dependsOn(':distributions:binZip')
+        }
+    }
 
     @Optional
     @InputFile

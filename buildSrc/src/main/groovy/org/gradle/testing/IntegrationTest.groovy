@@ -36,6 +36,13 @@ class IntegrationTest extends DistributionTest {
     @Input
     boolean requiresSamples
 
+    void setRequiresSamples(boolean requiresSamples) {
+        this.requiresSamples = requiresSamples
+        if (requiresSamples) {
+            dependsOn(':docs:userguideDocbook')
+        }
+    }
+
     @Optional
     @InputFile
     @PathSensitive(PathSensitivity.NAME_ONLY)
