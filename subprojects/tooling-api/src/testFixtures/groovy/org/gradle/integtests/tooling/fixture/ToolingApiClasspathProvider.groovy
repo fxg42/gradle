@@ -20,7 +20,6 @@ import org.apache.commons.io.output.TeeOutputStream
 import org.gradle.api.Action
 import org.gradle.internal.classloader.DefaultClassLoaderFactory
 import org.gradle.internal.classloader.FilteringClassLoader
-import org.gradle.internal.classloader.MultiParentClassLoader
 import org.gradle.internal.classloader.VisitableURLClassLoader
 import org.gradle.internal.os.OperatingSystem
 import org.gradle.testing.internal.util.RetryRule
@@ -46,6 +45,11 @@ trait ToolingApiClasspathProvider {
     }
 
     private ClassLoader createTestClassLoader(ToolingApiDistribution toolingApi, Action<? super FilteringClassLoader.Spec> classpathConfigurer, List<File> testClassPath) {
+        def tapiClassLoader = toolingApi.createClassLoader(createSharedClassLoader(classpathConfigurer))
+        return new VisitableURLClassLoader(tapiClassLoader, testClassPath.collect { it.toURI().toURL() })
+    }
+
+    private ClassLoader createSharedClassLoader(Action<? super FilteringClassLoader.Spec> classpathConfigurer) {
         def classLoaderFactory = new DefaultClassLoaderFactory()
 
         def sharedSpec = new FilteringClassLoader.Spec()
@@ -73,9 +77,6 @@ trait ToolingApiClasspathProvider {
         sharedSpec.allowClass(ClassLoaderFixture)
         classpathConfigurer.execute(sharedSpec)
         def sharedClassLoader = classLoaderFactory.createFilteringClassLoader(getClass().classLoader, sharedSpec)
-
-        def parentClassLoader = new MultiParentClassLoader(toolingApi.classLoader, sharedClassLoader)
-
-        return new VisitableURLClassLoader(parentClassLoader, testClassPath.collect { it.toURI().toURL() })
+        sharedClassLoader
     }
 }

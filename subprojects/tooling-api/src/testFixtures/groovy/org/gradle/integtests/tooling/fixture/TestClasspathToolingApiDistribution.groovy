@@ -27,7 +27,7 @@ class TestClasspathToolingApiDistribution implements ToolingApiDistribution {
         null
     }
 
-    ClassLoader getClassLoader() {
+    ClassLoader createClassLoader(ClassLoader parent) {
         return getClass().classLoader
     }
 }

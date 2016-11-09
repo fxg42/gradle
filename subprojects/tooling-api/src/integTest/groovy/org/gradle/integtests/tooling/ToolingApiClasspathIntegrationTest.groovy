@@ -22,13 +22,12 @@ import org.gradle.integtests.tooling.fixture.ToolingApiDistributionResolver
 
 class ToolingApiClasspathIntegrationTest extends AbstractIntegrationSpec {
 
-    def "tooling api classpath contains only tooling-api jar and slf4j"() {
+    def "tooling api classpath contains tooling-api jar and slf4j"() {
         when:
-        ToolingApiDistributionResolver resolver = new ToolingApiDistributionResolver().withDefaultRepository().withExternalToolingApiDistribution()
+        ToolingApiDistributionResolver resolver = new ToolingApiDistributionResolver().withExternalToolingApiDistribution()
         ToolingApiDistribution resolve = resolver.resolve(distribution.getVersion().version)
 
         then:
-        resolve.classpath.size() == 2
         resolve.classpath.any {it.name ==~ /slf4j-api-.*\.jar/}
         resolve.classpath.find { it.name ==~ /gradle-tooling-api.*\.jar/ }.size() < 1.7 * 1024 * 1024
 

@@ -33,7 +33,7 @@ class ToolingApiCompatibilitySuiteRunner extends AbstractCompatibilityTestRunner
 
     @Override
     protected void createExecutions() {
-        def resolver = new ToolingApiDistributionResolver().withDefaultRepository()
+        def resolver = new ToolingApiDistributionResolver()
         try {
             if (implicitVersion) {
                 add(new ToolingApiExecution(resolver.resolve(current.version.version), current))

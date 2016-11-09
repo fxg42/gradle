@@ -16,17 +16,22 @@
 
 package org.gradle.integtests.tooling.fixture
 
-import org.gradle.internal.classloader.DefaultClassLoaderFactory
+import org.gradle.api.internal.classpath.DefaultModuleRegistry
+import org.gradle.api.internal.classpath.Module
+import org.gradle.integtests.fixtures.executer.GradleDistribution
+import org.gradle.internal.classloader.VisitableURLClassLoader
+import org.gradle.internal.classpath.ClassPath
 import org.gradle.internal.classpath.DefaultClassPath
+import org.gradle.internal.installation.GradleInstallation
 import org.gradle.util.GradleVersion
 
 class ExternalToolingApiDistribution implements ToolingApiDistribution {
     private final GradleVersion version
-    private final Collection<File> classpath
+    private final GradleDistribution distribution
 
-    ExternalToolingApiDistribution(String version, Collection<File> classpath) {
+    ExternalToolingApiDistribution(String version, GradleDistribution distribution) {
         this.version = GradleVersion.version(version)
-        this.classpath = classpath
+        this.distribution = distribution
     }
 
     GradleVersion getVersion() {
@@ -34,11 +39,20 @@ class ExternalToolingApiDistribution implements ToolingApiDistribution {
     }
 
     Collection<File> getClasspath() {
-        classpath
+        getDistributionClassPath().getAsFiles()
     }
 
-    ClassLoader getClassLoader() {
-        return new DefaultClassLoaderFactory().createIsolatedClassLoader(new DefaultClassPath(classpath))
+    private ClassPath getDistributionClassPath() {
+        ClassPath classpath = new DefaultClassPath();
+        DefaultModuleRegistry registry = new DefaultModuleRegistry(new GradleInstallation(distribution.gradleHomeDir));
+        for (Module module : registry.getModule("gradle-tooling-api").getAllRequiredModules()) {
+            classpath = classpath.plus(module.getClasspath());
+        }
+        return classpath;
+    }
+
+    ClassLoader createClassLoader(ClassLoader parent) {
+        return new VisitableURLClassLoader(parent, getDistributionClassPath())
     }
 
     String toString() {

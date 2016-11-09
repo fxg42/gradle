@@ -21,6 +21,7 @@ import org.gradle.util.GradleVersion
 
 interface ToolingApiDistribution {
     GradleVersion getVersion()
-    @Nullable Collection<File> getClasspath()
-    ClassLoader getClassLoader()
+    @Nullable
+    Collection<File> getClasspath()
+    ClassLoader createClassLoader(ClassLoader parent)
 }
