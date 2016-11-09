@@ -33,15 +33,13 @@ import org.gradle.api.tasks.PathSensitivity
 @CacheableTask
 @CompileStatic
 class IntegrationTest extends DistributionTest {
+
+    IntegrationTest() {
+        optionalDependsOn({ requiresSamples }, ':docs:userguideDocbook')
+    }
+
     @Input
     boolean requiresSamples
-
-    void setRequiresSamples(boolean requiresSamples) {
-        this.requiresSamples = requiresSamples
-        if (requiresSamples) {
-            dependsOn(':docs:userguideDocbook')
-        }
-    }
 
     @Optional
     @InputFile
