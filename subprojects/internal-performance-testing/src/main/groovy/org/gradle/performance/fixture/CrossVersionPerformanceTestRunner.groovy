@@ -174,6 +174,11 @@ public class CrossVersionPerformanceTestRunner extends PerformanceTestSpec {
             if (version == 'defaults') {
                 throw new IllegalArgumentException("'defaults' shouldn't be used in target versions.")
             }
+            if (version.startsWith('#')) { // references a TeamCity build distribution
+                addMostRecentFinalRelease = false
+                baselineVersions.add(version)
+                continue
+            }
             def releasedVersion = findRelease(releases, version)
             def versionObject = GradleVersion.version(version)
             if (releasedVersion) {

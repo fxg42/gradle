@@ -19,6 +19,9 @@ package org.gradle.integtests.fixtures.executer
 import org.gradle.test.fixtures.file.TestFile
 
 class BuildServerGradleDistribution extends DownloadableGradleDistribution {
+    private static final BUILD_TYPE = "Gradle_Branches_CommitPhase_BuildDistributions"
+    private static final BUILD_ARTIFACTS_URL = "https://builds.gradle.org/repository/download/" + BUILD_TYPE + "/"
+
     private String buildNumberVersion
 
     public BuildServerGradleDistribution(String buildNumberVersion, TestFile versionDir) {
@@ -27,7 +30,7 @@ class BuildServerGradleDistribution extends DownloadableGradleDistribution {
     }
 
     static String convertToBuildVersion(String buildNumberVersion) {
-        def url = new URL("http://builds.gradle.org/repository/download/bt45/${buildNumberVersion - "#"}/build-receipt.properties?guest=1")
+        def url = new URL(BUILD_ARTIFACTS_URL + "${buildNumberVersion - '#'}/build-receipt.properties?guest=1")
         def buildReceipt = url.text
         Properties props = new Properties()
         props.load(new StringReader(buildReceipt))
@@ -36,6 +39,6 @@ class BuildServerGradleDistribution extends DownloadableGradleDistribution {
 
     @Override
     protected URL getDownloadURL() {
-        return new URL("http://builds.gradle.org/repository/download/bt45/${buildNumberVersion}/distributions/gradle-${URLEncoder.encode(version.version, "UTF-8")}-bin.zip?guest=1");
+        return new URL(BUILD_ARTIFACTS_URL + "${buildNumberVersion}/distributions/gradle-${URLEncoder.encode(version.version, "UTF-8")}-bin.zip?guest=1");
     }
 }
